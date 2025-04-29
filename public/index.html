@@ -7,12 +7,33 @@
 </head>
 <body>
     <h1>Hello! Welcome to chit-Chat</h1>
-    <form action="">
-     <input type="text"> 
     
-    </form>
-   
+    <input type="text" placeholder="Enter your message" id="message" />
+    <button id="sendBtn">send</button>
+    <div id="messageContainer"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket= io();
+        const messageInput = document.getElementById('message');
+        const sendBtn = document.getElementById('sendBtn');
+        const allmessages = document.getElementById('messageContainer');
+        // message received from server side
+        socket.on('server-messages',(message)=>{
+         
+           const p = document.createElement('p');
+           p.innerText = message;
+           allmessages.appendChild(p);
+           messageInput.value = "";
+        });
 
 
+        sendBtn.addEventListener('click',(e)=>{
+            const message = messageInput.value;
+            // message send form client to server
+            socket.emit('User-message', message);
+        });
+      
+    </script>
 </body>
 </html>

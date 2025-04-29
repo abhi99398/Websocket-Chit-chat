@@ -4,22 +4,23 @@ const path = require("path")
 const app= express();
 const {Server}= require("socket.io") 
 const server = http.createServer(app)
-
 require('dotenv').config();
+
 app.use(express.static(path.resolve("./public")));
 const io = new Server(server);
-// socket.io on differnt connection
+
+// socket.io on differnt events/connections
+
 io.on("connection",(socket)=>{
-console.log("user connected");
-socket.on("message",(data)=>{
-    console.log(data);
-    socket.broadcast.emit("message",data);
-})
+   socket.on('User-message',(message)=>{
 
-})
+    io.emit('server-messages',message);
+   })
 
+});
 
 
+// get request for serving  html file
 app.get("/",(req,res)=>{
     return res.sendFile("/public/index.html");
 })
